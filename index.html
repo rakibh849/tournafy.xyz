@@ -7,13 +7,13 @@
     <style>
         * {
             box-sizing: border-box;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #121212;
             color: #eee;
-            min-height: 100vh;
             padding: 20px;
         }
         h1 {
@@ -22,10 +22,10 @@
             color: #fff;
         }
         .section-title {
-            font-size: 20px;
-            margin: 30px 0 15px;
+            font-size: 22px;
+            margin: 40px 0 15px;
             border-left: 5px solid #ff4444;
-            padding-left: 10px;
+            padding-left: 12px;
             color: #ffcccc;
         }
         .search-container {
@@ -77,8 +77,11 @@
         }
         .modal-bg {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             justify-content: center;
             align-items: center;
@@ -141,7 +144,7 @@
             {
                 title: "Tandob (2025)",
                 year: 2025,
-                thumbnail: "https://i.imgur.com/tandob.jpg",
+                thumbnail: "https://i.ibb.co/gVRmv7m/tandob.jpg",
                 videoUrl: "https://www.youtube.com/embed/dummy1"
             }
         ],
@@ -149,7 +152,7 @@
             {
                 title: "Dil Bechara",
                 year: 2020,
-                thumbnail: "https://i.imgur.com/dilbechara.jpg",
+                thumbnail: "https://i.ibb.co/5Mgdpx7/dilbechara.jpg",
                 videoUrl: "https://www.youtube.com/embed/GODAlxW5Pes"
             }
         ],
@@ -165,7 +168,7 @@
             {
                 title: "Poran",
                 year: 2022,
-                thumbnail: "https://i.imgur.com/poran.jpg",
+                thumbnail: "https://i.ibb.co/PrpL7r4/poran.jpg",
                 videoUrl: "https://www.youtube.com/embed/dummy2"
             }
         ]
@@ -195,4 +198,53 @@
     }
 
     function renderSections(filter = "") {
-        movieSections
+        movieSections.innerHTML = "";
+        for (const [sectionName, movieList] of Object.entries(sections)) {
+            const filteredMovies = movieList.filter(movie =>
+                movie.title.toLowerCase().includes(filter.toLowerCase())
+            );
+            if (filteredMovies.length === 0) continue;
+
+            const section = document.createElement("div");
+            const title = document.createElement("div");
+            title.className = "section-title";
+            title.textContent = sectionName;
+
+            const grid = document.createElement("div");
+            grid.className = "movie-grid";
+
+            filteredMovies.forEach(movie => {
+                grid.appendChild(createMovieCard(movie));
+            });
+
+            section.appendChild(title);
+            section.appendChild(grid);
+            movieSections.appendChild(section);
+        }
+
+        if (movieSections.innerHTML === "") {
+            movieSections.innerHTML = "<p style='text-align:center; color:#ccc;'>কোন মুভি পাওয়া যায়নি।</p>";
+        }
+    }
+
+    modalClose.addEventListener("click", () => {
+        videoFrame.src = "";
+        modalBg.style.display = "none";
+    });
+
+    modalBg.addEventListener("click", e => {
+        if (e.target === modalBg) {
+            videoFrame.src = "";
+            modalBg.style.display = "none";
+        }
+    });
+
+    searchInput.addEventListener("input", () => {
+        renderSections(searchInput.value);
+    });
+
+    renderSections();
+</script>
+
+</body>
+</html>
