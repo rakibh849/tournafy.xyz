@@ -3,97 +3,219 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>সহজ মুভি ওয়েবসাইট</title>
+    <title>MovieBox Style মুভি ওয়েবসাইট</title>
     <style>
+        /* Reset and base */
+        * {
+            box-sizing: border-box;
+            margin: 0; padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f9f9f9;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
         }
         h1 {
             text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
         }
-        .movie-list {
-            display: flex;
-            flex-wrap: wrap;
+        /* Search bar */
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            width: 300px;
+            max-width: 90%;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+        /* Movie Grid */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
             gap: 20px;
-            justify-content: center;
         }
         .movie-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 6px rgba(0,0,0,0.1);
-            width: 180px;
+            background: #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgb(0 0 0 / 0.5);
             cursor: pointer;
-            text-align: center;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
         }
         .movie-card:hover {
             transform: scale(1.05);
         }
         .movie-card img {
             width: 100%;
-            border-radius: 8px 8px 0 0;
+            height: 240px;
+            object-fit: cover;
+            display: block;
         }
-        .movie-card h3 {
-            margin: 10px 0;
+        .movie-info {
+            padding: 10px;
+        }
+        .movie-title {
             font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
         }
+        .movie-year {
+            font-size: 14px;
+            color: #aaa;
+        }
+        /* Modal Styles */
+        .modal-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 10px;
+        }
+        .modal {
+            position: relative;
+            background: #000;
+            max-width: 800px;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .modal iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+        /* Responsive */
         @media (max-width: 600px) {
-            .movie-list {
-                flex-direction: column;
-                align-items: center;
+            .movie-card img {
+                height: 180px;
             }
-            .movie-card {
-                width: 90%;
+            .modal iframe {
+                height: 250px;
             }
         }
     </style>
 </head>
 <body>
-    <h1>সহজ মুভি ওয়েবসাইট</h1>
-    <div class="movie-list" id="movieList">
-        <!-- মুভি কার্ড গুলো এখানে জাভাস্ক্রিপ্ট দিয়ে আসবে -->
+
+<h1>MovieBox Style মুভি ওয়েবসাইট</h1>
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="মুভি সার্চ করুন..." />
+</div>
+
+<div class="movie-grid" id="movieGrid">
+    <!-- মুভি কার্ড গুলো এখানে আসবে -->
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+    <div class="modal">
+        <span class="modal-close" id="modalClose">&times;</span>
+        <iframe id="videoFrame" src="" allowfullscreen></iframe>
     </div>
+</div>
 
-    <script>
-        // মুভি ডাটা (তোমার মুভি লিস্ট)
-        const movies = [
-            {
-                id: 1,
-                title: "Example Movie 1",
-                thumbnail: "https://via.placeholder.com/180x270?text=Movie+1",
-                description: "এই মুভিটা একটা সুন্দর গল্পের মুভি।",
-                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
-            },
-            {
-                id: 2,
-                title: "Example Movie 2",
-                thumbnail: "https://via.placeholder.com/180x270?text=Movie+2",
-                description: "আরেকটি দারুণ মুভি।",
-                videoUrl: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
-            }
-        ];
+<script>
+    // মুভি ডাটা (তোমার মুভির ডাটা এখানে রাখবে)
+    const movies = [
+        {
+            id: 1,
+            title: "Avengers: Endgame",
+            year: 2019,
+            thumbnail: "https://image.tmdb.org/t/p/w500//or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+            videoUrl: "https://www.youtube.com/embed/TcMBFSGVi1c"
+        },
+        {
+            id: 2,
+            title: "Inception",
+            year: 2010,
+            thumbnail: "https://image.tmdb.org/t/p/w500//qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
+            videoUrl: "https://www.youtube.com/embed/YoHD9XEInc0"
+        },
+        {
+            id: 3,
+            title: "Interstellar",
+            year: 2014,
+            thumbnail: "https://image.tmdb.org/t/p/w500//gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+            videoUrl: "https://www.youtube.com/embed/zSWdZVtXT7E"
+        },
+        // তুমি তোমার মুভি যোগ করতে পারো এখানে...
+    ];
 
-        const movieList = document.getElementById("movieList");
+    const movieGrid = document.getElementById("movieGrid");
+    const modalBg = document.getElementById("modalBg");
+    const modalClose = document.getElementById("modalClose");
+    const videoFrame = document.getElementById("videoFrame");
+    const searchInput = document.getElementById("searchInput");
 
-        movies.forEach(movie => {
+    function renderMovies(filter="") {
+        movieGrid.innerHTML = "";
+        let filteredMovies = movies.filter(movie => 
+            movie.title.toLowerCase().includes(filter.toLowerCase())
+        );
+        if(filteredMovies.length === 0){
+            movieGrid.innerHTML = "<p style='color:#ccc; text-align:center;'>কোন মুভি পাওয়া যায়নি।</p>";
+            return;
+        }
+        filteredMovies.forEach(movie => {
             const card = document.createElement("div");
             card.className = "movie-card";
             card.innerHTML = `
                 <img src="${movie.thumbnail}" alt="${movie.title}" />
-                <h3>${movie.title}</h3>
+                <div class="movie-info">
+                    <div class="movie-title">${movie.title}</div>
+                    <div class="movie-year">${movie.year}</div>
+                </div>
             `;
-
-            // ক্লিক করলে ডিটেইল পেজে যাবে (localStorage দিয়ে ডাটা পাঠাবো)
             card.addEventListener("click", () => {
-                localStorage.setItem("selectedMovie", JSON.stringify(movie));
-                window.location.href = "movie.html";
+                videoFrame.src = movie.videoUrl + "?autoplay=1";
+                modalBg.style.display = "flex";
             });
-
-            movieList.appendChild(card);
+            movieGrid.appendChild(card);
         });
-    </script>
+    }
+
+    modalClose.addEventListener("click", () => {
+        videoFrame.src = "";
+        modalBg.style.display = "none";
+    });
+
+    modalBg.addEventListener("click", (e) => {
+        if(e.target === modalBg){
+            videoFrame.src = "";
+            modalBg.style.display = "none";
+        }
+    });
+
+    searchInput.addEventListener("input", () => {
+        renderMovies(searchInput.value);
+    });
+
+    // প্রথমে সব মুভি দেখাবে
+    renderMovies();
+</script>
+
 </body>
 </html>
