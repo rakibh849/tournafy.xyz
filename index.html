@@ -1,207 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Boom Flim</title>
+  <title>Guess the Number Game</title>
   <style>
     body {
-      margin: 0;
-      background: #141414;
-      font-family: 'Arial', sans-serif;
-      color: white;
-    }
-
-    header {
-      background: #111;
+      font-family: Arial, sans-serif;
       text-align: center;
-      padding: 20px;
-      font-size: 2em;
-      color: #e50914;
+      background: #f0f0f0;
+      padding-top: 100px;
     }
-
-    .section {
-      padding: 20px;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    .section-title {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .card {
-      background: #222;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
-    .card img {
-      width: 100%;
-      display: block;
-    }
-
-    .card p {
+    input, button {
       padding: 10px;
-      text-align: center;
+      font-size: 16px;
     }
-
-    /* Modal Video */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.85);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      position: relative;
-      width: 90%;
-      max-width: 800px;
-    }
-
-    .modal iframe {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: none;
-      border-radius: 10px;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: -35px;
-      right: 0;
-      font-size: 30px;
-      color: white;
-      cursor: pointer;
-    }
-
-    .actions {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .actions a {
-      display: inline-block;
-      margin: 0 10px;
-      padding: 10px 15px;
-      background: #e50914;
-      border-radius: 5px;
-      text-decoration: none;
-      color: white;
+    #message {
+      margin-top: 20px;
+      font-size: 20px;
       font-weight: bold;
-    }
-
-    @media(max-width: 600px) {
-      .section-title {
-        font-size: 1.2em;
-      }
     }
   </style>
 </head>
 <body>
 
-  <header>Boom Flim</header>
+  <h1>Guess the Number (1-10)</h1>
+  <input type="number" id="guess" min="1" max="10" placeholder="Enter number">
+  <button onclick="checkGuess()">Guess</button>
 
-  <div class="section">
-    <h2 class="section-title">🔥 Bangla Movie</h2>
-    <div class="cards">
-      <div class="card" onclick="openModal('https://www.youtube.com/embed/Gs0fdpzRd4k')">
-        <img src="https://i.postimg.cc/zD0CJZJk/tandob.jpg" alt="Tandob">
-        <p>Tandob (2025)</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2 class="section-title">🔥 Hindi Movie</h2>
-    <div class="cards">
-      <div class="card" onclick="openModal('https://drive.google.com/file/d/1hkL-SpRHLLmCed5DzW9YqJlTRxUiXJEN/preview')">
-        <img src="https://i.postimg.cc/6qmB3CyC/animal-movie.jpg" alt="Animal">
-        <p>Animal (2023)</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <h2 class="section-title">🎬 Bachelor Point - Season 5</h2>
-    <div class="cards">
-      <div class="card" onclick="openModal('https://www.youtube.com/embed/Gs0fdpzRd4k')">
-        <img src="https://i.postimg.cc/qvwTCpwL/bachelor.jpg" alt="Bachelor Point">
-        <p>Episode 9</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="videoModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <iframe id="videoFrame" allowfullscreen></iframe>
-      <div class="actions">
-        <a href="#" onclick="copyLink()">🔗 Share</a>
-        <a href="#" onclick="nextEpisode()">➡ Next</a>
-        <a href="https://drive.google.com/uc?export=download&id=1hkL-SpRHLLmCed5DzW9YqJlTRxUiXJEN" target="_blank">⬇ Download</a>
-      </div>
-    </div>
-  </div>
+  <div id="message"></div>
 
   <script>
-    function openModal(videoUrl) {
-      const modal = document.getElementById("videoModal");
-      const frame = document.getElementById("videoFrame");
-      frame.src = videoUrl + "?autoplay=1";
-      modal.style.display = "flex";
+    let secretNumber = Math.floor(Math.random() * 10) + 1;
 
-      // Try fullscreen on video load
-      frame.onload = () => {
-        const el = frame;
-        if (el.requestFullscreen) el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        else if (el.msRequestFullscreen) el.msRequestFullscreen();
-      };
+    function checkGuess() {
+      const guess = parseInt(document.getElementById('guess').value);
+      const message = document.getElementById('message');
+
+      if (guess === secretNumber) {
+        message.textContent = "🎉 ঠিক ধরেছো! তুমি জিতেছো!";
+        message.style.color = "green";
+      } else {
+        message.textContent = "❌ ভুল! আবার চেষ্টা করো।";
+        message.style.color = "red";
+      }
     }
-
-    function closeModal() {
-      const modal = document.getElementById("videoModal");
-      const frame = document.getElementById("videoFrame");
-      frame.src = "";
-      modal.style.display = "none";
-    }
-
-    function copyLink() {
-      navigator.clipboard.writeText(window.location.href);
-      alert("✅ Link copied!");
-    }
-
-    function nextEpisode() {
-      alert("🔜 Coming soon...");
-    }
-
-    // Close modal on outside click
-    window.onclick = function(e) {
-      const modal = document.getElementById("videoModal");
-      if (e.target == modal) closeModal();
-    };
   </script>
 
 </body>
