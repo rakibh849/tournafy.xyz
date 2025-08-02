@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Boom Film - MovieBox Style মুভি ওয়েবসাইট</title>
+    <title>Boom Flim Wib</title>
     <style>
-        /* Reset and base */
         * {
             box-sizing: border-box;
             margin: 0; padding: 0;
@@ -22,7 +21,6 @@
             margin-bottom: 30px;
             color: #fff;
         }
-        /* Search bar */
         .search-container {
             text-align: center;
             margin-bottom: 30px;
@@ -36,7 +34,6 @@
             outline: none;
             font-size: 16px;
         }
-        /* Movie Grid */
         .movie-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
@@ -57,7 +54,6 @@
             width: 100%;
             height: 240px;
             object-fit: cover;
-            display: block;
         }
         .movie-info {
             padding: 10px;
@@ -72,7 +68,6 @@
             font-size: 14px;
             color: #aaa;
         }
-        /* Modal Styles */
         .modal-bg {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -106,7 +101,6 @@
             cursor: pointer;
             user-select: none;
         }
-        /* Responsive */
         @media (max-width: 600px) {
             .movie-card img {
                 height: 180px;
@@ -119,17 +113,14 @@
 </head>
 <body>
 
-<h1>Boom Film - MovieBox Style মুভি ওয়েবসাইট</h1>
+<h1>Boom Flim</h1>
 
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="মুভি সার্চ করুন..." />
 </div>
 
-<div class="movie-grid" id="movieGrid">
-    <!-- মুভি কার্ড গুলো এখানে আসবে -->
-</div>
+<div class="movie-grid" id="movieGrid"></div>
 
-<!-- Modal -->
 <div class="modal-bg" id="modalBg">
     <div class="modal">
         <span class="modal-close" id="modalClose">&times;</span>
@@ -138,7 +129,6 @@
 </div>
 
 <script>
-    // মুভি ডাটা (তোমার মুভির ডাটা এখানে রাখবে)
     const movies = [
         {
             id: 1,
@@ -160,8 +150,7 @@
             year: 2014,
             thumbnail: "https://image.tmdb.org/t/p/w500//gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
             videoUrl: "https://www.youtube.com/embed/zSWdZVtXT7E"
-        },
-        // তোমার নিজের মুভি যোগ করতে পারো এখানে...
+        }
     ];
 
     const movieGrid = document.getElementById("movieGrid");
@@ -170,16 +159,18 @@
     const videoFrame = document.getElementById("videoFrame");
     const searchInput = document.getElementById("searchInput");
 
-    function renderMovies(filter="") {
+    function renderMovies(filter = "") {
         movieGrid.innerHTML = "";
-        let filteredMovies = movies.filter(movie => 
+        const filtered = movies.filter(movie =>
             movie.title.toLowerCase().includes(filter.toLowerCase())
         );
-        if(filteredMovies.length === 0){
-            movieGrid.innerHTML = "<p style='color:#ccc; text-align:center;'>কোন মুভি পাওয়া যায়নি।</p>";
+
+        if (filtered.length === 0) {
+            movieGrid.innerHTML = "<p style='text-align:center; color:#ccc;'>কোন মুভি পাওয়া যায়নি।</p>";
             return;
         }
-        filteredMovies.forEach(movie => {
+
+        filtered.forEach(movie => {
             const card = document.createElement("div");
             card.className = "movie-card";
             card.innerHTML = `
@@ -202,8 +193,8 @@
         modalBg.style.display = "none";
     });
 
-    modalBg.addEventListener("click", (e) => {
-        if(e.target === modalBg){
+    modalBg.addEventListener("click", e => {
+        if (e.target === modalBg) {
             videoFrame.src = "";
             modalBg.style.display = "none";
         }
@@ -213,7 +204,6 @@
         renderMovies(searchInput.value);
     });
 
-    // প্রথমে সব মুভি দেখাবে
     renderMovies();
 </script>
 
