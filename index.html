@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Boom Flim </title>
+    <title>Boom Flim</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,6 +21,13 @@
             margin-bottom: 30px;
             color: #fff;
         }
+        .section-title {
+            font-size: 20px;
+            margin: 30px 0 15px;
+            border-left: 5px solid #ff4444;
+            padding-left: 10px;
+            color: #ffcccc;
+        }
         .search-container {
             text-align: center;
             margin-bottom: 30px;
@@ -36,7 +43,7 @@
         }
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 20px;
         }
         .movie-card {
@@ -119,7 +126,7 @@
     <input type="text" id="searchInput" placeholder="মুভি সার্চ করুন..." />
 </div>
 
-<div class="movie-grid" id="movieGrid"></div>
+<div id="movieSections"></div>
 
 <div class="modal-bg" id="modalBg">
     <div class="modal">
@@ -129,83 +136,63 @@
 </div>
 
 <script>
-    const movies = [
-        {
-            id: 1,
-            title: "Avengers: Endgame",
-            year: 2019,
-            thumbnail: "https://image.tmdb.org/t/p/w500//or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-            videoUrl: "https://www.youtube.com/embed/TcMBFSGVi1c"
-        },
-        {
-            id: 2,
-            title: "Inception",
-            year: 2010,
-            thumbnail: "https://image.tmdb.org/t/p/w500//qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
-            videoUrl: "https://www.youtube.com/embed/YoHD9XEInc0"
-        },
-        {
-            id: 3,
-            title: "Interstellar",
-            year: 2014,
-            thumbnail: "https://image.tmdb.org/t/p/w500//gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
-            videoUrl: "https://www.youtube.com/embed/zSWdZVtXT7E"
-        }
-    ];
+    const sections = {
+        "Trending Bengali": [
+            {
+                title: "Tandob (2025)",
+                year: 2025,
+                thumbnail: "https://i.imgur.com/tandob.jpg",
+                videoUrl: "https://www.youtube.com/embed/dummy1"
+            }
+        ],
+        "Love Stories": [
+            {
+                title: "Dil Bechara",
+                year: 2020,
+                thumbnail: "https://i.imgur.com/dilbechara.jpg",
+                videoUrl: "https://www.youtube.com/embed/GODAlxW5Pes"
+            }
+        ],
+        "Hindi Movie": [
+            {
+                title: "3 Idiots",
+                year: 2009,
+                thumbnail: "https://image.tmdb.org/t/p/w500//66F4uO2P5zF2kVYahfA3Plgyp4S.jpg",
+                videoUrl: "https://www.youtube.com/embed/xvszmNXdM4w"
+            }
+        ],
+        "Bangla Movie": [
+            {
+                title: "Poran",
+                year: 2022,
+                thumbnail: "https://i.imgur.com/poran.jpg",
+                videoUrl: "https://www.youtube.com/embed/dummy2"
+            }
+        ]
+    };
 
-    const movieGrid = document.getElementById("movieGrid");
+    const movieSections = document.getElementById("movieSections");
     const modalBg = document.getElementById("modalBg");
     const modalClose = document.getElementById("modalClose");
     const videoFrame = document.getElementById("videoFrame");
     const searchInput = document.getElementById("searchInput");
 
-    function renderMovies(filter = "") {
-        movieGrid.innerHTML = "";
-        const filtered = movies.filter(movie =>
-            movie.title.toLowerCase().includes(filter.toLowerCase())
-        );
-
-        if (filtered.length === 0) {
-            movieGrid.innerHTML = "<p style='text-align:center; color:#ccc;'>কোন মুভি পাওয়া যায়নি।</p>";
-            return;
-        }
-
-        filtered.forEach(movie => {
-            const card = document.createElement("div");
-            card.className = "movie-card";
-            card.innerHTML = `
-                <img src="${movie.thumbnail}" alt="${movie.title}" />
-                <div class="movie-info">
-                    <div class="movie-title">${movie.title}</div>
-                    <div class="movie-year">${movie.year}</div>
-                </div>
-            `;
-            card.addEventListener("click", () => {
-                videoFrame.src = movie.videoUrl + "?autoplay=1";
-                modalBg.style.display = "flex";
-            });
-            movieGrid.appendChild(card);
+    function createMovieCard(movie) {
+        const card = document.createElement("div");
+        card.className = "movie-card";
+        card.innerHTML = `
+            <img src="${movie.thumbnail}" alt="${movie.title}" />
+            <div class="movie-info">
+                <div class="movie-title">${movie.title}</div>
+                <div class="movie-year">${movie.year}</div>
+            </div>
+        `;
+        card.addEventListener("click", () => {
+            videoFrame.src = movie.videoUrl + "?autoplay=1";
+            modalBg.style.display = "flex";
         });
+        return card;
     }
 
-    modalClose.addEventListener("click", () => {
-        videoFrame.src = "";
-        modalBg.style.display = "none";
-    });
-
-    modalBg.addEventListener("click", e => {
-        if (e.target === modalBg) {
-            videoFrame.src = "";
-            modalBg.style.display = "none";
-        }
-    });
-
-    searchInput.addEventListener("input", () => {
-        renderMovies(searchInput.value);
-    });
-
-    renderMovies();
-</script>
-
-</body>
-</html>
+    function renderSections(filter = "") {
+        movieSections
