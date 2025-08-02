@@ -1,109 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
-  <title>Catch the Box Game</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      background-color: #111;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      padding-top: 30px;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    #score {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-    #box {
-      width: 60px;
-      height: 60px;
-      background-color: #00ff99;
-      position: absolute;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: 0.1s;
-    }
-    #startBtn {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #00ff99;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>সহজ মুভি ওয়েবসাইট</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .movie-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 6px rgba(0,0,0,0.1);
+            width: 180px;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .movie-card img {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+        .movie-card h3 {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        @media (max-width: 600px) {
+            .movie-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            .movie-card {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 <body>
+    <h1>সহজ মুভি ওয়েবসাইট</h1>
+    <div class="movie-list" id="movieList">
+        <!-- মুভি কার্ড গুলো এখানে জাভাস্ক্রিপ্ট দিয়ে আসবে -->
+    </div>
 
-  <h1>Catch the Box 🎯</h1>
-  <div id="score">Score: 0</div>
-  <button id="startBtn" onclick="startGame()">Start Game</button>
-  <div id="box" style="display: none;"></div>
+    <script>
+        // মুভি ডাটা (তোমার মুভি লিস্ট)
+        const movies = [
+            {
+                id: 1,
+                title: "Example Movie 1",
+                thumbnail: "https://via.placeholder.com/180x270?text=Movie+1",
+                description: "এই মুভিটা একটা সুন্দর গল্পের মুভি।",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+            },
+            {
+                id: 2,
+                title: "Example Movie 2",
+                thumbnail: "https://via.placeholder.com/180x270?text=Movie+2",
+                description: "আরেকটি দারুণ মুভি।",
+                videoUrl: "https://www.youtube.com/embed/3JZ_D3ELwOQ"
+            }
+        ];
 
-  <script>
-    const box = document.getElementById("box");
-    const scoreText = document.getElementById("score");
-    let score = 0;
-    let playing = false;
+        const movieList = document.getElementById("movieList");
 
-    function getRandomPosition() {
-      const x = Math.floor(Math.random() * (window.innerWidth - 60));
-      const y = Math.floor(Math.random() * (window.innerHeight - 60));
-      return { x, y };
-    }
+        movies.forEach(movie => {
+            const card = document.createElement("div");
+            card.className = "movie-card";
+            card.innerHTML = `
+                <img src="${movie.thumbnail}" alt="${movie.title}" />
+                <h3>${movie.title}</h3>
+            `;
 
-    function moveBox() {
-      const { x, y } = getRandomPosition();
-      box.style.left = `${x}px`;
-      box.style.top = `${y}px`;
-    }
+            // ক্লিক করলে ডিটেইল পেজে যাবে (localStorage দিয়ে ডাটা পাঠাবো)
+            card.addEventListener("click", () => {
+                localStorage.setItem("selectedMovie", JSON.stringify(movie));
+                window.location.href = "movie.html";
+            });
 
-    function startGame() {
-      score = 0;
-      scoreText.textContent = "Score: 0";
-      box.style.display = "block";
-      playing = true;
-      moveBox();
-
-      const moveInterval = setInterval(() => {
-        if (!playing) {
-          clearInterval(moveInterval);
-        } else {
-          moveBox();
-        }
-      }, 800);
-    }
-
-    box.addEventListener("click", () => {
-      if (playing) {
-        score++;
-        scoreText.textContent = `Score: ${score}`;
-        moveBox();
-      }
-    });
-
-    // Stop game after 30 seconds
-    setInterval(() => {
-      if (playing) {
-        playing = false;
-        box.style.display = "none";
-        alert(`⏰ Time's up! Your score: ${score}`);
-      }
-    }, 30000);
-  </script>
-
+            movieList.appendChild(card);
+        });
+    </script>
 </body>
 </html>
