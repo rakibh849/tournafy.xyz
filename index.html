@@ -1,48 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Guess the Number Game</title>
+  <title>Catch the Box Game</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f0f0f0;
-      padding-top: 100px;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      padding-top: 30px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
+    h1 {
+      margin-bottom: 10px;
     }
-    #message {
-      margin-top: 20px;
+    #score {
       font-size: 20px;
-      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    #box {
+      width: 60px;
+      height: 60px;
+      background-color: #00ff99;
+      position: absolute;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.1s;
+    }
+    #startBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #00ff99;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Guess the Number (1-10)</h1>
-  <input type="number" id="guess" min="1" max="10" placeholder="Enter number">
-  <button onclick="checkGuess()">Guess</button>
-
-  <div id="message"></div>
+  <h1>Catch the Box 🎯</h1>
+  <div id="score">Score: 0</div>
+  <button id="startBtn" onclick="startGame()">Start Game</button>
+  <div id="box" style="display: none;"></div>
 
   <script>
-    let secretNumber = Math.floor(Math.random() * 10) + 1;
+    const box = document.getElementById("box");
+    const scoreText = document.getElementById("score");
+    let score = 0;
+    let playing = false;
 
-    function checkGuess() {
-      const guess = parseInt(document.getElementById('guess').value);
-      const message = document.getElementById('message');
-
-      if (guess === secretNumber) {
-        message.textContent = "🎉 ঠিক ধরেছো! তুমি জিতেছো!";
-        message.style.color = "green";
-      } else {
-        message.textContent = "❌ ভুল! আবার চেষ্টা করো।";
-        message.style.color = "red";
-      }
+    function getRandomPosition() {
+      const x = Math.floor(Math.random() * (window.innerWidth - 60));
+      const y = Math.floor(Math.random() * (window.innerHeight - 60));
+      return { x, y };
     }
+
+    function moveBox() {
+      const { x, y } = getRandomPosition();
+      box.style.left = `${x}px`;
+      box.style.top = `${y}px`;
+    }
+
+    function startGame() {
+      score = 0;
+      scoreText.textContent = "Score: 0";
+      box.style.display = "block";
+      playing = true;
+      moveBox();
+
+      const moveInterval = setInterval(() => {
+        if (!playing) {
+          clearInterval(moveInterval);
+        } else {
+          moveBox();
+        }
+      }, 800);
+    }
+
+    box.addEventListener("click", () => {
+      if (playing) {
+        score++;
+        scoreText.textContent = `Score: ${score}`;
+        moveBox();
+      }
+    });
+
+    // Stop game after 30 seconds
+    setInterval(() => {
+      if (playing) {
+        playing = false;
+        box.style.display = "none";
+        alert(`⏰ Time's up! Your score: ${score}`);
+      }
+    }, 30000);
   </script>
 
 </body>
