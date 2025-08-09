@@ -1,256 +1,468 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Boom Flim</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121212;
-            color: #eee;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #fff;
-        }
-        .section-title {
-            font-size: 22px;
-            margin: 40px 0 15px;
-            border-left: 5px solid #ff4444;
-            padding-left: 12px;
-            color: #ffcccc;
-        }
-        .search-container {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        input[type="text"] {
-            width: 300px;
-            max-width: 90%;
-            padding: 10px 15px;
-            border-radius: 25px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-        .movie-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-        }
-        .movie-card {
-            background: #222;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgb(0 0 0 / 0.5);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        .movie-card:hover {
-            transform: scale(1.05);
-        }
-        .movie-card img {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
-        }
-        .movie-info {
-            padding: 10px;
-        }
-        .movie-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-        .movie-year {
-            font-size: 14px;
-            color: #aaa;
-        }
-        .modal-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 10px;
-        }
-        .modal {
-            position: relative;
-            background: #000;
-            max-width: 800px;
-            width: 100%;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .modal iframe {
-            width: 100%;
-            height: 450px;
-            border: none;
-        }
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: #fff;
-            cursor: pointer;
-            user-select: none;
-        }
-        @media (max-width: 600px) {
-            .movie-card img {
-                height: 180px;
-            }
-            .modal iframe {
-                height: 250px;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Free Fire Tournament — Demo</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14; --card:#0f1720; --muted:#9aa6b2; --accent:#ffcc00;
+      --accent-2:#ff6b6b; --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter,system-ui,Arial; background:linear-gradient(180deg,#07101a 0%, #05121a 100%); color:#e6eef6;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .container{max-width:1100px;margin:28px auto;padding:16px;}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:8px;background:linear-gradient(135deg,#ffcc00,#ff6b6b);display:flex;align-items:center;justify-content:center;font-weight:700;color:#081018}
+    h1{margin:0;font-size:20px}
+    .controls{display:flex;gap:10px;align-items:center}
+    button{background:var(--accent);border:none;color:#081018;padding:9px 12px;border-radius:8px;font-weight:600;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:8px 10px}
+    main{display:grid;grid-template-columns:1fr 360px;gap:16px}
+    @media(max-width:960px){main{grid-template-columns:1fr} .sidebar{order:2}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:14px;border-radius:10px; box-shadow: 0 6px 18px rgba(2,6,23,0.6);}
+    .tournament{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.03)}
+    .t-left{flex:1}
+    .t-title{font-weight:700;margin:0 0 6px}
+    .t-meta{color:var(--muted);font-size:13px}
+    .t-actions{display:flex;gap:8px}
+    .muted{color:var(--muted);font-size:13px}
+    .badge{background:var(--glass);padding:6px 8px;border-radius:6px;font-weight:600;color:var(--muted);font-size:13px}
+    .sidebar .card{position:sticky;top:20px}
+    /* Modal */
+    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:60}
+    .modal{width:100%;max-width:720px;background:var(--card);padding:18px;border-radius:12px}
+    .form-row{display:flex;gap:8px;margin-bottom:10px}
+    .form-row input,.form-row select,textarea{flex:1;padding:9px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    .small{font-size:13px;color:var(--muted)}
+    input[type=file]{padding:6px}
+    .xclose{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:18px}
+    /* Leaderboard */
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th,td{padding:8px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    th{color:var(--muted);font-weight:600;font-size:13px}
+    td .name{font-weight:700}
+    /* Admin */
+    .admin-tools{display:flex;gap:8px;flex-wrap:wrap}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+    .center{display:flex;align-items:center;justify-content:center}
+    footer{margin-top:22px;color:var(--muted);font-size:13px;text-align:center}
+    .flex{display:flex;gap:8px;align-items:center}
+    /* responsive tweaks */
+    @media(max-width:420px){
+      .logo{width:46px;height:46px;font-size:14px}
+      header{gap:8px}
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">FF</div>
+        <div>
+          <h1>Free Fire Tournament</h1>
+          <div class="small muted">Demo — রেজিস্ট্রেশন ও লাইভ স্কোর (local demo)</div>
+        </div>
+      </div>
 
-<h1>Boom Flim Web</h1>
+      <div class="controls">
+        <button id="createTourBtn">নতুন টুর্নামেন্ট</button>
+        <button class="btn-ghost" id="adminBtn">Admin</button>
+      </div>
+    </header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="মুভি সার্চ করুন..." />
-</div>
+    <main>
+      <section>
+        <div class="card" id="tournamentListCard">
+          <h3 style="margin-top:0">আসন্ন টুর্নামেন্ট</h3>
+          <div id="tournamentList"></div>
+          <div class="muted small" style="margin-top:8px">কোন টুর্নামেন্টে অংশ নিতে Register চাপুন।</div>
+        </div>
 
-<div id="movieSections"></div>
+        <div class="card" style="margin-top:12px">
+          <h3 style="margin-top:0">লেটেস্ট রেজাল্ট</h3>
+          <div id="recentResults" class="muted small" style="min-height:80px"></div>
+        </div>
+      </section>
 
-<div class="modal-bg" id="modalBg">
-    <div class="modal">
-        <span class="modal-close" id="modalClose">&times;</span>
-        <iframe id="videoFrame" src="" allowfullscreen></iframe>
+      <aside class="sidebar">
+        <div class="card">
+          <h3 style="margin-top:0">পপুলার টিম</h3>
+          <div class="muted small">Top leaderboard (ডেমো)</div>
+          <table id="leaderboard" style="margin-top:10px">
+            <thead><tr><th>টিম/প্লেয়ার</th><th>পয়েন্ট</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3 style="margin-top:0">শুরু করার নির্দেশ</h3>
+          <ol class="muted small" style="padding-left:18px">
+            <li>টুর্নামেন্ট তৈরি করুন (Admin)</li>
+            <li>খেলোয়াড়রা Register করবে</li>
+            <li>Admin লিভ স্কোর আপডেট করবে</li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+
+    <footer>ডেমো সাইট — Production ব্যবহারের আগে সার্ভার ও পেমেন্ট ইন্টিগ্রেশন করুন।</footer>
+  </div>
+
+  <!-- Modal: Register / Create / Admin -->
+  <div id="modalBack" class="modal-back" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <strong id="modalTitle">Modal</strong>
+        <button class="xclose" id="closeModal">&times;</button>
+      </div>
+      <div id="modalBody"></div>
     </div>
-</div>
+  </div>
 
-<script>
-    const sections = {
-        "Trending Bengali": [
-            {
-                title: "Tandob (2025)",
-                year: 2025,
-                thumbnail: "https://i.ibb.co/gVRmv7m/tandob.jpg",
-                videoUrl: "https://www.youtube.com/embed/dummy1"
-            }
-        ],
-        "Love Stories": [
-            {
-                title: "Dil Bechara",
-                year: 2020,
-                thumbnail: "https://i.ibb.co/5Mgdpx7/dilbechara.jpg",
-                videoUrl: "https://www.youtube.com/embed/GODAlxW5Pes"
-            }
-        ],
-        "Hindi Movie": [
-    {
-        title: "3 Idiots",
-        year: 2009,
-        thumbnail: "https://image.tmdb.org/t/p/w500//66F4uO2P5zF2kVYahfA3Plgyp4S.jpg",
-        videoUrl: "https://www.youtube.com/embed/xvszmNXdM4w"
-    },
-    {
-        title: "Animal (2023)",
-        year: 2023,
-        thumbnail: "https://i.ibb.co/Zgm2GmR/animal.jpg", // তুমি চাইলে অন্য ছবি দিতে পারো
-        videoUrl: "https://drive.google.com/file/d/1hkL-SpRHLLmCed5DzW9YqJlTRxUiXJEN/preview"
-    }
-],
-        "Bangla Movie": [
-            {
-                title: "Poran",
-                year: 2022,
-                thumbnail: "https://i.ibb.co/PrpL7r4/poran.jpg",
-                videoUrl: "https://www.youtube.com/embed/dummy2"
-            }
-        ]
-    };
+  <script>
+  /**********************
+   * Demo data & helpers
+   **********************/
+  const STORAGE_KEYS = {TOURS:'ff_tours_v1', REG:'ff_regs_v1', RESULTS:'ff_res_v1'};
+  const defaultTours = [
+    {id: 't1', title:'Free Fire Solo — Evening Cup', date:'2025-08-12', time:'8:00 PM', entry: 'Free', prize:'৳ 2,000', seats:100, platform:'Solo'},
+    {id: 't2', title:'FF Duo — Weekend Clash', date:'2025-08-16', time:'6:00 PM', entry: '50', prize:'৳ 5,000', seats:64, platform:'Duo'}
+  ];
 
-    const movieSections = document.getElementById("movieSections");
-    const modalBg = document.getElementById("modalBg");
-    const modalClose = document.getElementById("modalClose");
-    const videoFrame = document.getElementById("videoFrame");
-    const searchInput = document.getElementById("searchInput");
+  function load(key, fallback){ try{const j=localStorage.getItem(key); return j?JSON.parse(j):fallback}catch(e){return fallback} }
+  function save(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
+  function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9) }
 
-    function createMovieCard(movie) {
-        const card = document.createElement("div");
-        card.className = "movie-card";
-        card.innerHTML = `
-            <img src="${movie.thumbnail}" alt="${movie.title}" />
-            <div class="movie-info">
-                <div class="movie-title">${movie.title}</div>
-                <div class="movie-year">${movie.year}</div>
-            </div>
-        `;
-        card.addEventListener("click", () => {
-            videoFrame.src = movie.videoUrl + "?autoplay=1";
-            modalBg.style.display = "flex";
-        });
-        return card;
-    }
+  // initialize data
+  if(!localStorage.getItem(STORAGE_KEYS.TOURS)) save(STORAGE_KEYS.TOURS, defaultTours);
+  if(!localStorage.getItem(STORAGE_KEYS.REG)) save(STORAGE_KEYS.REG, []);
+  if(!localStorage.getItem(STORAGE_KEYS.RESULTS)) save(STORAGE_KEYS.RESULTS, []);
 
-    function renderSections(filter = "") {
-        movieSections.innerHTML = "";
-        for (const [sectionName, movieList] of Object.entries(sections)) {
-            const filteredMovies = movieList.filter(movie =>
-                movie.title.toLowerCase().includes(filter.toLowerCase())
-            );
-            if (filteredMovies.length === 0) continue;
+  /**********************
+   * Render functions
+   **********************/
+  const tournamentListEl = document.getElementById('tournamentList');
+  const leaderboardBody = document.querySelector('#leaderboard tbody');
+  const recentResultsEl = document.getElementById('recentResults');
 
-            const section = document.createElement("div");
-            const title = document.createElement("div");
-            title.className = "section-title";
-            title.textContent = sectionName;
-
-            const grid = document.createElement("div");
-            grid.className = "movie-grid";
-
-            filteredMovies.forEach(movie => {
-                grid.appendChild(createMovieCard(movie));
-            });
-
-            section.appendChild(title);
-            section.appendChild(grid);
-            movieSections.appendChild(section);
-        }
-
-        if (movieSections.innerHTML === "") {
-            movieSections.innerHTML = "<p style='text-align:center; color:#ccc;'>কোন মুভি পাওয়া যায়নি।</p>";
-        }
-    }
-
-    modalClose.addEventListener("click", () => {
-        videoFrame.src = "";
-        modalBg.style.display = "none";
+  function renderTournaments(){
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    tournamentListEl.innerHTML = '';
+    tours.forEach(t=>{
+      const div = document.createElement('div');
+      div.className = 'tournament';
+      div.innerHTML = `
+        <div class="t-left">
+          <div class="t-title">${escapeHtml(t.title)}</div>
+          <div class="t-meta">${t.date} • ${t.time} • ${t.platform} • Entry: ${t.entry} • Prize: ${t.prize}</div>
+        </div>
+        <div class="t-actions">
+          <button class="ghost" data-id="${t.id}" onclick="openRegister('${t.id}')">Register</button>
+          <button class="badge" onclick="openDetails('${t.id}')">Details</button>
+        </div>
+      `;
+      tournamentListEl.appendChild(div);
     });
+  }
 
-    modalBg.addEventListener("click", e => {
-        if (e.target === modalBg) {
-            videoFrame.src = "";
-            modalBg.style.display = "none";
-        }
+  function renderLeaderboard(){
+    const regs = load(STORAGE_KEYS.REG, []);
+    // aggregate pseudo-points by team/player
+    const map = {};
+    regs.forEach(r=>{
+      const key = r.team || r.name;
+      map[key] = (map[key]||0) + (parseInt(r.points||0)||0) + 0; // points stored via admin updates
     });
-
-    searchInput.addEventListener("input", () => {
-        renderSections(searchInput.value);
+    const arr = Object.entries(map).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+    leaderboardBody.innerHTML = '';
+    if(arr.length===0){
+      leaderboardBody.innerHTML = '<tr><td colspan="2" class="muted small">No registrations yet</td></tr>';
+      return;
+    }
+    arr.forEach(item=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="name">${escapeHtml(item.k)}</td><td>${item.v}</td>`;
+      leaderboardBody.appendChild(tr);
     });
+  }
 
-    renderSections();
-</script>
+  function renderRecentResults(){
+    const res = load(STORAGE_KEYS.RESULTS, []);
+    if(res.length===0){
+      recentResultsEl.innerHTML = `<div class="muted small">No results yet.</div>`;
+      return;
+    }
+    recentResultsEl.innerHTML = res.slice().reverse().map(r=>`<div><strong>${escapeHtml(r.tournament)}</strong> — ${escapeHtml(r.note)}</div>`).join('');
+  }
 
+  /**********************
+   * Modal & interactions
+   **********************/
+  const modalBack = document.getElementById('modalBack');
+  const modalBody = document.getElementById('modalBody');
+  const modalTitle = document.getElementById('modalTitle');
+  document.getElementById('closeModal').addEventListener('click', closeModal);
+  modalBack.addEventListener('click', (e)=>{ if(e.target===modalBack) closeModal(); });
+
+  function openModal(title, contentHtml){
+    modalTitle.textContent = title;
+    modalBody.innerHTML = contentHtml;
+    modalBack.style.display = 'flex';
+  }
+  function closeModal(){ modalBack.style.display='none'; modalBody.innerHTML=''; }
+
+  // Register
+  window.openRegister = function(tid){
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    const t = tours.find(x=>x.id===tid);
+    if(!t) return alert('টুর্নামেন্ট পাওয়া যায়নি');
+    const html = `
+      <div><label>টুর্নামেন্ট: <strong>${escapeHtml(t.title)}</strong></label></div>
+      <div class="form-row"><input id="r_name" placeholder="আপনার নাম" /></div>
+      <div class="form-row"><input id="r_uid" placeholder="Free Fire UID" /></div>
+      <div class="form-row"><input id="r_team" placeholder="Team / Nick (optional)" /></div>
+      <div><label class="small">Payment screenshot (optional)</label><input type="file" id="r_screenshot" accept="image/*" /></div>
+      <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="submitRegistration('${t.id}')">Submit</button>
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      </div>
+    `;
+    openModal('টুর্নামেন্ট রেজিস্ট্রেশন', html);
+  };
+
+  async function readFileAsDataURL(file){
+    return await new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onload = ()=>res(fr.result);
+      fr.onerror = ()=>rej('read error');
+      fr.readAsDataURL(file);
+    });
+  }
+
+  window.submitRegistration = async function(tid){
+    const name = document.getElementById('r_name').value.trim();
+    const uid = document.getElementById('r_uid').value.trim();
+    const team = document.getElementById('r_team').value.trim();
+    const fileInput = document.getElementById('r_screenshot');
+    if(!name || !uid) return alert('নাম ও UID আবশ্যক');
+    let screenshotData = '';
+    if(fileInput.files && fileInput.files[0]){
+      screenshotData = await readFileAsDataURL(fileInput.files[0]);
+    }
+    const regs = load(STORAGE_KEYS.REG, []);
+    regs.push({id:uid+'-'+Date.now(), name, uid, team, tournamentId:tid, screenshot:screenshotData, points:0, created: new Date().toISOString()});
+    save(STORAGE_KEYS.REG, regs);
+    // Notify admin via Telegram / webhook (placeholder)
+    // sendTelegramMessage(`New registration: ${name} (${uid}) for ${tid}`);
+    alert('Registration submitted!');
+    closeModal();
+    renderLeaderboard();
+  };
+
+  // Details
+  window.openDetails = function(tid){
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    const regs = load(STORAGE_KEYS.REG, []);
+    const t = tours.find(x=>x.id===tid);
+    if(!t) return;
+    const myRegs = regs.filter(r=>r.tournamentId===tid);
+    const regRows = myRegs.map(r=>`<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.uid)}</td><td>${escapeHtml(r.team||'—')}</td></tr>`).join('');
+    const html = `
+      <div><strong>${escapeHtml(t.title)}</strong></div>
+      <div class="muted small">${t.date} • ${t.time} • ${t.platform} • Entry: ${t.entry}</div>
+      <hr/>
+      <h4>Registered Players (${myRegs.length})</h4>
+      <div style="overflow:auto;max-height:220px">
+        <table style="width:100%"><thead><tr><th>Name</th><th>UID</th><th>Team</th></tr></thead>
+        <tbody>${regRows || '<tr><td colspan="3" class="muted small">No registrations</td></tr>'}</tbody></table>
+      </div>
+      <div style="margin-top:10px;display:flex;justify-content:flex-end"><button onclick="closeModal()">Close</button></div>
+    `;
+    openModal('টুর্নামেন্ট ডিটেইলস', html);
+  };
+
+  /**********************
+   * Admin
+   **********************/
+  document.getElementById('adminBtn').addEventListener('click', ()=>{ openAdminLogin(); });
+  function openAdminLogin(){
+    const html = `
+      <div><label class="small">Admin Password</label><input id="admin_pass" type="password" placeholder="password" /></div>
+      <div style="margin-top:10px;display:flex;justify-content:flex-end;gap:8px">
+        <button onclick="tryAdminLogin()">Login</button>
+        <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      </div>
+    `;
+    openModal('Admin Login', html);
+  }
+  window.tryAdminLogin = function(){
+    const p = document.getElementById('admin_pass').value;
+    // demo password: admin123 (change in production)
+    if(p==='admin123'){ openAdminPanel(); } else { alert('Invalid password'); }
+  };
+
+  function openAdminPanel(){
+    const html = `
+      <div class="admin-tools">
+        <button class="ghost" onclick="openCreateTour()">Create Tournament</button>
+        <button class="ghost" onclick="openManageRegs()">Manage Registrations</button>
+        <button class="ghost" onclick="openResults()">Publish Result</button>
+        <button class="ghost" onclick="openLiveScore()">Update Live Score</button>
+        <button class="ghost" onclick="closeModal()">Close</button>
+      </div>
+      <div style="margin-top:12px" class="muted small">
+        <strong>Notes:</strong>
+        <ul>
+          <li>Use "Update Live Score" to assign points to registrations (this affects leaderboard).</li>
+          <li>For production, secure admin with server auth & SSL.</li>
+        </ul>
+      </div>
+    `;
+    openModal('Admin Panel', html);
+  }
+
+  window.openCreateTour = function(){
+    const html = `
+      <div><label class="small">Title</label><input id="ct_title" placeholder="Tournament title" /></div>
+      <div class="form-row"><input id="ct_date" type="date" /><input id="ct_time" type="time" /></div>
+      <div class="form-row"><input id="ct_entry" placeholder="Entry (e.g., 50 or Free)" /><input id="ct_prize" placeholder="Prize (e.g., ৳ 2000)" /></div>
+      <div class="form-row"><input id="ct_seats" placeholder="Seats (e.g., 100)" /><input id="ct_platform" placeholder="Solo/Duo/Squad" /></div>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end;gap:8px">
+        <button onclick="createTour()">Create</button>
+        <button class="btn-ghost" onclick="openAdminPanel()">Back</button>
+      </div>
+    `;
+    openModal('Create Tournament', html);
+  };
+
+  window.createTour = function(){
+    const title = document.getElementById('ct_title').value.trim();
+    const date = document.getElementById('ct_date').value;
+    const time = document.getElementById('ct_time').value;
+    const entry = document.getElementById('ct_entry').value.trim() || 'Free';
+    const prize = document.getElementById('ct_prize').value.trim() || '—';
+    const seats = document.getElementById('ct_seats').value || 0;
+    const platform = document.getElementById('ct_platform').value || 'Solo';
+    if(!title || !date) return alert('Title and date required');
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    const id = uid('t');
+    tours.push({id, title, date, time, entry, prize, seats, platform});
+    save(STORAGE_KEYS.TOURS, tours);
+    renderTournaments();
+    alert('Tournament created');
+    openAdminPanel();
+  };
+
+  window.openManageRegs = function(){
+    const regs = load(STORAGE_KEYS.REG, []);
+    const rows = regs.map(r=>`<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.uid)}</td><td>${escapeHtml(r.team||'—')}</td><td>${escapeHtml(new Date(r.created).toLocaleString())}</td><td><button class="ghost" onclick="removeReg('${r.id}')">Remove</button></td></tr>`).join('');
+    const html = `
+      <h4>All Registrations (${regs.length})</h4>
+      <div style="max-height:300px;overflow:auto"><table style="width:100%"><thead><tr><th>Name</th><th>UID</th><th>Team</th><th>Date</th><th>Action</th></tr></thead><tbody>${rows || '<tr><td colspan="5" class="muted small">No registrations</td></tr>'}</tbody></table></div>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end"><button class="btn-ghost" onclick="openAdminPanel()">Back</button></div>
+    `;
+    openModal('Manage Registrations', html);
+  };
+
+  window.removeReg = function(id){
+    if(!confirm('Are you sure to remove this registration?')) return;
+    let regs = load(STORAGE_KEYS.REG, []);
+    regs = regs.filter(r=>r.id!==id);
+    save(STORAGE_KEYS.REG, regs);
+    openManageRegs();
+    renderLeaderboard();
+  };
+
+  window.openResults = function(){
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    const tourOptions = tours.map(t=>`<option value="${t.id}">${escapeHtml(t.title)}</option>`).join('');
+    const html = `
+      <div><label class="small">Tournament</label><select id="res_tour">${tourOptions}</select></div>
+      <div><label class="small">Note (e.g., Winner: XYZ)</label><input id="res_note" placeholder="Result note" /></div>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end;gap:8px">
+        <button onclick="publishResult()">Publish</button>
+        <button class="btn-ghost" onclick="openAdminPanel()">Back</button>
+      </div>
+    `;
+    openModal('Publish Result', html);
+  };
+
+  window.publishResult = function(){
+    const tid = document.getElementById('res_tour').value;
+    const note = document.getElementById('res_note').value.trim();
+    const tours = load(STORAGE_KEYS.TOURS, []);
+    const t = tours.find(x=>x.id===tid);
+    if(!t) return alert('Select tournament');
+    const results = load(STORAGE_KEYS.RESULTS, []);
+    results.push({id:uid('r'), tournament: t.title, note, date: new Date().toISOString()});
+    save(STORAGE_KEYS.RESULTS, results);
+    // Optionally: notify via Telegram API / webhook - placeholder
+    // sendTelegramMessage(`Result published for ${t.title}: ${note}`);
+    alert('Result published');
+    openAdminPanel();
+    renderRecentResults();
+  };
+
+  window.openLiveScore = function(){
+    // Admin can allocate points to registered players
+    const regs = load(STORAGE_KEYS.REG, []);
+    const rows = regs.map(r=>`<tr><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.uid)}</td><td><input style="width:80px;padding:6px;border-radius:6px;border:1px solid rgba(255,255,255,0.04)" id="p_${r.id}" value="${r.points||0}"></td><td><button class="ghost" onclick="updatePoints('${r.id}')">Save</button></td></tr>`).join('');
+    const html = `
+      <h4>Update Points</h4>
+      <div style="max-height:300px;overflow:auto"><table style="width:100%"><thead><tr><th>Name</th><th>UID</th><th>Points</th><th>Action</th></tr></thead><tbody>${rows || '<tr><td colspan="4" class="muted small">No registrations</td></tr>'}</tbody></table></div>
+      <div style="margin-top:8px;display:flex;justify-content:flex-end"><button class="btn-ghost" onclick="openAdminPanel()">Back</button></div>
+    `;
+    openModal('Live Score / Points', html);
+  };
+
+  window.updatePoints = function(regId){
+    const val = document.getElementById('p_'+regId).value;
+    let regs = load(STORAGE_KEYS.REG, []);
+    const idx = regs.findIndex(r=>r.id===regId);
+    if(idx===-1) return alert('Registration not found');
+    regs[idx].points = parseInt(val) || 0;
+    save(STORAGE_KEYS.REG, regs);
+    alert('Points updated');
+    renderLeaderboard();
+  };
+
+  /**********************
+   * Utilities
+   **********************/
+  function escapeHtml(s){ if(!s && s!==0) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+  // Placeholder for Telegram notification (requires server-side token)
+  async function sendTelegramMessage(text){
+    // DO NOT put bot token here in client code. This is only an example for server.
+    // Example (server-side):
+    // POST https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage
+    // body: { chat_id: <YOUR_CHAT_ID>, text: text }
+    // For client demo, we just console log.
+    console.log('[Send TG]', text);
+  }
+
+  /**********************
+   * Initial render
+   **********************/
+  renderTournaments();
+  renderLeaderboard();
+  renderRecentResults();
+
+  // Create tournament shortcut
+  document.getElementById('createTourBtn').addEventListener('click', ()=>{ openCreateTour(); });
+
+  // small helper to auto-open registration if user clicks direct link (not used here)
+  //window.location.hash handling could be added here.
+
+  </script>
 </body>
 </html>
