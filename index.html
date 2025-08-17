@@ -1,89 +1,275 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Fire Tournament</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: white;
-            text-align: center;
-        }
-        header {
-            background: rgba(0,0,0,0.7);
-            padding: 20px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            border-bottom: 2px solid #ffb400;
-        }
-        .description {
-            padding: 20px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: auto;
-        }
-        .game-modes {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px auto;
-            gap: 20px;
-        }
-        .mode-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-            width: 250px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .mode-card:hover {
-            background: rgba(255,255,255,0.15);
-            transform: scale(1.05);
-            border-color: #ffb400;
-        }
-        footer {
-            margin-top: 30px;
-            padding: 15px;
-            background: rgba(0,0,0,0.8);
-            font-size: 0.9rem;
-            color: #bbb;
-        }
-        a {
-            color: #ffb400;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>খেলো Bangladesh — টুর্নামেন্ট অ্যাপ (APK ডাউনলোড)</title>
+  <meta name="description" content="খেলো Bangladesh ধরনের টুর্নামেন্ট অ্যাপ — প্রতিদিন টুর্নামেন্ট, prize, ID/Pass ও সরাসরি APK ডাউনলোড করুন।" />
+  <meta name="theme-color" content="#0b1226" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="খেলো Bangladesh — টুর্নামেন্ট অ্যাপ" />
+  <meta property="og:description" content="APK ডাউনলোড করুন — প্রতিদিনের টুর্নামেন্ট, রিওয়ার্ড ও লেজার ম্যাচ।" />
+  <meta property="og:image" content="assets/og-image.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="assets/icon-192.png" sizes="192x192" />
+  <style>
+    :root{
+      --bg:#071020;
+      --card:#0f1724;
+      --accent:#ff5b3a;
+      --muted:#9aa6b2;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      font-family: "Inter", "Noto Sans Bengali", system-ui, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071021 0%, #081426 60%);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#ff8a66);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:20px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.4);
+    }
+    .brand h1{font-size:18px;margin:0}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-size:14px}
+    /* Hero */
+    .hero{display:flex;gap:24px;align-items:center;padding:18px 0}
+    .hero-left{flex:1}
+    .kicker{display:inline-block;background:var(--glass);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted);margin-bottom:12px}
+    h2{font-size:28px;margin:6px 0 12px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{
+      background:linear-gradient(90deg,var(--accent),#ff814f);
+      color:#fff;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:600;
+      display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(255,90,60,0.18);
+    }
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .hero-right{width:320px;max-width:40%}
+    .phone-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px;border-radius:18px;box-shadow:inset 0 -20px 40px rgba(0,0,0,0.6);}
+    .phone-screenshot{width:100%;border-radius:12px;display:block}
+    /* features */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+    .card{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .card h3{margin:0 0 8px;font-size:16px}
+    .muted{color:var(--muted);font-size:14px}
+    /* screenshots carousel */
+    .carousel{margin-top:18px;display:flex;gap:10px;overflow:hidden}
+    .carousel img{height:160px;border-radius:10px;object-fit:cover;flex:0 0 45%}
+    /* FAQ */
+    .faq{margin-top:20px}
+    .faq-item{background:var(--glass);padding:12px;border-radius:10px;margin-bottom:8px}
+    .footer{margin-top:28px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .small{font-size:13px;color:var(--muted)}
+    /* responsive */
+    @media (max-width:800px){
+      .hero{flex-direction:column-reverse}
+      .hero-right{width:100%;max-width:420px}
+      .carousel img{flex:0 0 48%}
+      h2{font-size:22px}
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">KB</div>
+        <div>
+          <h1>খেলো Bangladesh</h1>
+          <div class="small">টুর্নামেন্ট • পুরস্কার • APK ডাউনলোড</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#how">কিভাবে খেলবেন</a>
+        <a href="#download">ডাউনলোড</a>
+        <a href="#faq">প্রশ্নোত্তর</a>
+        <a id="telegram-link" href="#" target="_blank">Telegram</a>
+      </nav>
+    </header>
 
-    <header>🔥 Free Fire Tournament 🔥</header>
+    <section class="hero">
+      <div class="hero-left">
+        <div class="kicker">Daily Tournament • Win ৳1000–2000</div>
+        <h2>খেলো Bangladesh — টুর্নামেন্ট APK</h2>
+        <p class="lead">সহজেই রেজিস্টার করে টুর্নামেন্টে অংশ নাও। ID/Pass, Live Match, Scoreboard ও রিওয়ার্ড পেতে APK ডাউনলোড করো।</p>
 
-    <div class="description">
-        আপনি একজন <strong>Esports প্লেয়ার</strong>? 🎮  
-        গেম খেলে প্রতিদিন জিতে নিন <strong>500-1000 টাকা</strong> পর্যন্ত রিওয়ার্ড!  
-        আমাদের ম্যাচগুলো পেইজে লাইভ দেখানো হয় 📺  
-        যেকোন সমস্যায় <a href="https://t.me/yourtelegram" target="_blank">টেলিগ্রামে মেসেজ করুন</a>।
-    </div>
+        <div class="cta">
+          <!-- replace data-apk attribute with your direct download link -->
+          <a id="downloadBtn" class="btn" href="#download" data-apk="https://drive.google.com/uc?export=download&id=REPLACE_FILE_ID">
+            ⬇️ APK ডাউনলোড করুন
+          </a>
+          <a class="btn secondary" id="howBtn" href="#how">ভিডিও দেখুন</a>
+        </div>
 
-    <div class="game-modes">
-        <div class="mode-card">🏆 CLASSIC MATCH</div>
-        <div class="mode-card">⚔️ CLASH SQUAD</div>
-        <div class="mode-card">🐺 LONE WOLF</div>
-    </div>
+        <div class="features" style="margin-top:16px">
+          <div class="card">
+            <h3>প্রতিদিনের টুর্নামেন্ট</h3>
+            <div class="muted">বিভিন্ন টাইমে ব্র ও CS ম্যাচ। ইনস্ট্যান্ট ID/Pass প্রদান।</div>
+          </div>
+          <div class="card">
+            <h3>লেখচিত্র ও রিওয়ার্ড</h3>
+            <div class="muted">প্রাইজ পুল, পার কিল রিওয়ার্ড ও উইনার পেমেন্ট ট্র্যাকিং।</div>
+          </div>
+          <div class="card">
+            <h3>Telegram সাপোর্ট</h3>
+            <div class="muted">রেজিস্ট্রেশন, নোটিফিকেশন ও কাস্টমার সাপোর্ট টিম।</div>
+          </div>
+        </div>
+      </div>
 
-    <footer>
-        &copy; 2025 Free Fire Tournament | Powered by YourName
+      <div class="hero-right">
+        <div class="phone-card">
+          <img class="phone-screenshot" src="assets/phone-screenshot.png" alt="App screenshot" />
+        </div>
+
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:space-between">
+          <div style="flex:1" class="card small">
+            <strong>Version:</strong> 1.0.0<br><span class="muted">APK size: 14 MB</span>
+          </div>
+          <div style="flex:1" class="card small">
+            <strong>Support:</strong><br><span class="muted">Telegram & Email</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- screenshots -->
+    <section id="how" aria-label="how to use">
+      <h2 style="margin-top:18px">কিভাবে ব্যবহার করবেন</h2>
+      <p class="muted">APK ডাউনলোড করে ইনস্টল করুন — Settings → Install unknown apps → অনুমতি দিন। তারপর অ্যাপ চালিয়ে রেজিস্টার করে ম্যাচে অংশ নিন।</p>
+      <div class="carousel" id="carousel">
+        <img src="assets/shot1.jpg" alt="Screenshot 1">
+        <img src="assets/shot2.jpg" alt="Screenshot 2">
+      </div>
+    </section>
+
+    <!-- download block -->
+    <section id="download" style="margin-top:18px">
+      <div class="card">
+        <h3>APK ডাউনলোড</h3>
+        <p class="muted">নিচের বাটনে ক্লিক করে সরাসরি APK ডাউনলোড করুন। Google Drive/MediaFire লিংক দিন।</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <a id="directDownload" class="btn" href="#" data-apk="https://drive.google.com/uc?export=download&id=REPLACE_FILE_ID">⬇️ সরাসরি ডাউনলোড</a>
+          <a class="btn secondary" id="installGuide" href="#" >ইনস্টল নির্দেশ</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="faq">
+      <h2 style="margin-top:18px">প্রশ্নোত্তর</h2>
+      <div class="faq-item">
+        <strong>APK কি নিরাপদ?</strong>
+        <div class="muted">এই অ্যাপটি আমাদের অফিসিয়াল বিল্ড। ইনস্টল করার আগে অ্যান্টিভাইরাস দিয়ে স্ক্যান করুন।</div>
+      </div>
+      <div class="faq-item">
+        <strong>কীভাবে পেমেন্ট পাবো?</strong>
+        <div class="muted">বিকাশ/নাগাদ/বেইংক ট্রান্সফার – টুর্নামেন্ট রেজাল্ট অনুযায়ী পেমেন্ট করা হবে।</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <div class="small">© <span id="year"></span> খেলো Bangladesh</div>
+        <div class="small">Privacy • Terms • Contact</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a id="telegramFooter" class="small" href="https://t.me/REPLACE_TELEGRAM" target="_blank">Join Telegram</a>
+        <a class="small" href="mailto:youremail@example.com">youremail@example.com</a>
+      </div>
     </footer>
+  </div>
 
+  <!-- Simple download modal (lightweight) -->
+  <div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:20px">
+    <div style="max-width:420px;background:#0b1224;border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04)">
+      <h3 style="margin-top:0">ইনস্টল নির্দেশ</h3>
+      <ol class="muted">
+        <li>APK ডাউনলোড শেষ হলে ফাইল ওপেন করুন।</li>
+        <li>Settings → Install unknown apps → [Your browser] → Allow।</li>
+        <li>Install চাপুন এবং অ্যাপ চালান।</li>
+      </ol>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="closeModal" class="btn secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // small helpers
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // replace links in header nav
+    const telegramLink = document.getElementById('telegram-link');
+    telegramLink.href = "https://t.me/REPLACE_TELEGRAM";
+
+    // download button behavior
+    function startDownload(apkUrl){
+      // simple analytics ping (optional)
+      try{navigator.sendBeacon && navigator.sendBeacon('/_ping','download')}catch(e){}
+      // start download
+      window.location.href = apkUrl;
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', function(e){
+      e.preventDefault();
+      const apk = e.currentTarget.dataset.apk;
+      if(!apk || apk.includes('REPLACE_FILE_ID')){
+        alert('দয়া করে আপনার APK ডাউনলোড লিংক সেট করুন (index.html এ)।');
+        return;
+      }
+      // on mobile show install tips
+      if(window.innerWidth < 900){
+        // directly navigate to download
+        startDownload(apk);
+      } else {
+        // show modal then download
+        startDownload(apk);
+      }
+    });
+
+    document.getElementById('directDownload').addEventListener('click', function(e){
+      e.preventDefault();
+      const apk = e.currentTarget.dataset.apk;
+      if(!apk || apk.includes('REPLACE_FILE_ID')){
+        alert('দয়া করে আপনার APK ডাউনলোড লিংক সেট করুন (index.html এ)।');
+        return;
+      }
+      startDownload(apk);
+    });
+
+    // install guide modal
+    document.getElementById('installGuide').addEventListener('click', function(e){
+      e.preventDefault();
+      document.getElementById('installModal').style.display = 'flex';
+    });
+    document.getElementById('closeModal').addEventListener('click', function(){
+      document.getElementById('installModal').style.display = 'none';
+    });
+
+    // small carousel auto scroll
+    (function carouselAuto(){
+      const el = document.getElementById('carousel');
+      if(!el) return;
+      let pos = 0;
+      setInterval(()=> {
+        pos = (pos + 48);
+        if(pos > el.scrollWidth - el.clientWidth) pos = 0;
+        el.scrollTo({left:pos,behavior:'smooth'});
+      }, 2600);
+    })();
+  </script>
 </body>
 </html>
