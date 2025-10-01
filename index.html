@@ -1,45 +1,72 @@
-import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
-from dotenv import load_dotenv
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Ads Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      padding: 50px 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+    }
+    header p {
+      font-size: 1.2rem;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background: #ffcc00;
+      color: #000;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #ffaa00;
+    }
+    section {
+      padding: 40px 20px;
+    }
+    footer {
+      margin-top: 30px;
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🚀 Telegram Ads & Earning Bot</h1>
+    <p>কাজ করে আয় করুন, রেফার করে ইনকাম করুন, আর বিজ্ঞাপন চালান সহজে।</p>
+    <a href="https://t.me/YOUR_BOT_USERNAME" target="_blank" class="btn">👉 Start Bot</a>
+  </header>
 
-# .env ফাইল থেকে TOKEN নেবে
-load_dotenv()
-TOKEN = os.getenv("BOT_TOKEN")
+  <section>
+    <h2>📌 ফিচার সমূহ</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li>✅ টাস্ক করে আয়</li>
+      <li>✅ রেফারাল সিস্টেম</li>
+      <li>✅ ইনস্ট্যান্ট ব্যালেন্স চেক</li>
+      <li>✅ বিজ্ঞাপন পোস্ট করার সুযোগ</li>
+      <li>✅ সাপোর্ট: বিকাশ/নগদ/ক্রিপ্টো</li>
+    </ul>
+  </section>
 
-# /start কমান্ড
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    keyboard = [
-        [InlineKeyboardButton("📝 কাজ শুরু করি", callback_data="tasks")],
-        [InlineKeyboardButton("👥 রেফারাল লিঙ্ক", callback_data="referral")],
-        [InlineKeyboardButton("💰 ব্যালেন্স", callback_data="balance")],
-    ]
-    await update.message.reply_text(
-        f"👋 হ্যালো {user.first_name}!\nএখানে কাজ করে আয় করতে পারবেন।",
-        reply_markup=InlineKeyboardMarkup(keyboard)
-    )
-
-# বাটন হ্যান্ডলার
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == "tasks":
-        await query.edit_message_text("📋 এখানে কাজগুলা আসবে...")
-    elif query.data == "referral":
-        ref_link = f"https://t.me/{context.bot.username}?start={query.from_user.id}"
-        await query.edit_message_text(f"🔗 আপনার রেফারাল লিঙ্ক:\n{ref_link}")
-    elif query.data == "balance":
-        # ডাটাবেস এ ইউজারের কয়েন/টাকা রাখতে হবে (এখন শুধু demo)
-        await query.edit_message_text("💰 আপনার ব্যালেন্স: 0 টাকা")
-
-# মেইন রানার
-def main():
-    app = Application.builder().token(TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CallbackQueryHandler(button_handler))
-    app.run_polling()
-
-if __name__ == "__main__":
-    main()
+  <footer>
+    <p>© 2025 Telegram Ads Bot | Developed by You</p>
+  </footer>
+</body>
+</html>
